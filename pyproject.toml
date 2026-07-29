@@ -1,0 +1,22 @@
+[project]
+name = "mojo-ftfy"
+version = "0.1.0"
+description = "Unicode text repair with Mojo-accelerated mojibake transcoding"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Lee Penkman", email = "leepenkman@gmail.com" }]
+keywords = ["mojo", "unicode", "mojibake", "text"]
+
+[project.optional-dependencies]
+dev = ["pytest", "ftfy>=6.3.1,<7"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "python" }
+
+[tool.setuptools.packages.find]
+where = ["python"]
