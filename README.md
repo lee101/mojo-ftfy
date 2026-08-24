@@ -70,10 +70,10 @@ input; speedup is ftfy time divided by mojo-ftfy time.
 
 | case | mojo-ftfy | ftfy 6.3.1 | speedup |
 |---|---:|---:|---:|
-| Latin-1 mojibake, 1.2M chars | 31.52 ms | 548.97 ms | 17.42x |
-| Windows-1252 mojibake, 1.4M chars | 25.10 ms | 620.37 ms | 24.71x |
-| double mojibake, 1.0M chars | 41.61 ms | 557.72 ms | 13.40x |
-| clean ASCII, 1.2M chars | 0.010 ms | 2.29 ms | 226.91x |
+| Latin-1 mojibake, 1.2M chars | 26.37 ms | 448.04 ms | 16.99x |
+| Windows-1252 mojibake, 1.4M chars | 26.75 ms | 608.52 ms | 22.75x |
+| double mojibake, 1.0M chars | 32.07 ms | 363.53 ms | 11.34x |
+| clean ASCII, 1.2M chars | 0.004 ms | 2.26 ms | 554.89x |
 
 ASCII input is rejected from the repair path using Python's cached string-kind
 metadata, so it does not allocate a UTF-8 buffer or cross the FFI boundary.
@@ -81,8 +81,9 @@ Inside Mojo, UTF-8 validation and badness scoring skip ASCII runs with SIMD and
 use a scalar tail for the remainder.
 
 There is no parallel or GPU path. The repair kernels are variable-width,
-branch-heavy streaming scans; splitting them would require boundary scans and
-output coordination.
+branch-heavy streaming scans with low arithmetic intensity (below roughly two
+operations per byte moved); splitting them would require boundary scans and
+output coordination, while device transfer and launch overhead would dominate.
 
 ## How it works
 
