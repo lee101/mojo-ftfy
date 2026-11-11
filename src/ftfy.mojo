@@ -13,7 +13,7 @@ def ascii_prefix(src: BPtr, n: Int) -> Int:
     comptime W = simdwidthof[DType.float64]()
     var i = 0
     while i + W <= n:
-        var chunk = src.load[width=W](i).cast[DType.int64]()
+        var chunk = src.unsafe_load[width=W](i).cast[DType.int64]()
         if (chunk & 0x80).reduce_add() != 0:
             break
         i += W
